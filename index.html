@@ -1,9 +1,28 @@
-<title>Datos de tu Negocio</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Datos de tu negocio</title>
+<meta name="description" content="Unas preguntas para armar la página web de tu negocio. Se llena desde el celular en unos 10 minutos.">
+
+<!-- Vista previa cuando el enlace se comparte por WhatsApp -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Datos de tu negocio">
+<meta property="og:description" content="Unas preguntas para armar tu página web. Se llena desde el celular en unos 10 minutos y lo puedes dejar a medias.">
+<meta name="twitter:card" content="summary">
+
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c2224" media="(prefers-color-scheme: dark)">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap">
+
 <style>
 /* Layout: wizard de una columna, barra de progreso fija arriba y barra de acción fija abajo. */
 :root{
+  color-scheme:light;
   --bg:#faf8f4;
   --surface:#ffffff;
   --surface-2:#f3efe8;
@@ -50,6 +69,9 @@
 }
 
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+img{max-width:100%}
+[hidden]{display:none!important}
 body{
   background:var(--bg);
   color:var(--fg);
@@ -211,6 +233,8 @@ input:focus-visible,textarea:focus-visible{
   .btn,.opt,input,textarea{transition:border-color .12s,background .12s,box-shadow .12s}
 }
 </style>
+</head>
+<body>
 
 <div class="topbar">
   <div class="topbar-in">
@@ -234,10 +258,11 @@ input:focus-visible,textarea:focus-visible{
 
 <script>
 /* =========================================================================
-   CONFIGURACIÓN — cambia este número por el tuyo.
+   CONFIGURACIÓN — tu número de WhatsApp.
    Formato: indicativo del país + número, sin +, sin espacios, sin guiones.
-   Colombia: 57 + celular de 10 dígitos.  Ejemplo: 573001234567
+   Colombia: 57 + celular de 10 dígitos.
    También se puede sobrescribir en el enlace:  ...?tel=573001234567
+   Para borrar lo guardado y empezar de cero:   ...?reset=1
    ========================================================================= */
 var CONFIG = { tel: "573016679791" };
 
@@ -703,7 +728,23 @@ var CONFIG = { tel: "573016679791" };
     else pantallaPaso();
   }
 
+  // ?reset=1 borra lo guardado. Sirve para probar el formulario varias veces.
+  if (params.get("reset")) {
+    try { localStorage.removeItem(KEY); } catch (e) { /* almacenamiento bloqueado */ }
+  }
+
   cargar();
+
+  // Si ya hay respuestas guardadas, abre en el paso más avanzado que tenga algo
+  // lleno, para no obligar a recorrer otra vez todo el formulario.
+  for (var i = TOTAL - 1; i >= 0; i--) {
+    var hayAlgo = PASOS[i].campos.filter(visible).some(function (c) { return lleno(c); });
+    if (hayAlgo) { paso = i; break; }
+  }
+
   render();
 })();
 </script>
+
+</body>
+</html>
