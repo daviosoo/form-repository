@@ -591,6 +591,19 @@ var CONFIG = { tel: "573016679791" };
       ? "Te faltan " + falta.length + " respuesta" + (falta.length === 1 ? "" : "s") + " que necesito para poder empezar. Están marcadas abajo."
       : "Revisa que todo esté bien y mándame las respuestas. Llegan a mi WhatsApp como un solo mensaje."));
 
+    // Sin un número válido, WhatsApp abre el chat sin precargar nada.
+    var telOk = /^[0-9]{10,15}$/.test(TEL) && TEL !== "573001234567";
+    if (!telOk) {
+      var nt = el("div", "note flag");
+      nt.appendChild(el("strong", null, "Falta configurar el número de WhatsApp"));
+      var pt = el("p", null, TEL === "573001234567"
+        ? "El formulario todavía tiene el número de ejemplo. Cambia CONFIG.tel arriba en el archivo, o abre el enlace agregándole ?tel=57 y tu celular."
+        : "El número «" + TEL + "» no tiene el formato que WhatsApp espera: indicativo del país y celular, solo dígitos. Para Colombia son 12, por ejemplo 573001234567.");
+      pt.style.margin = "6px 0 0";
+      nt.appendChild(pt);
+      s.appendChild(nt);
+    }
+
     if (falta.length) {
       var nf = el("div", "note flag");
       nf.appendChild(el("strong", null, "Me hace falta:"));
@@ -673,17 +686,12 @@ var CONFIG = { tel: "573016679791" };
     atras.addEventListener("click", function () { paso = TOTAL - 1; render(); });
     bar.appendChild(atras);
 
-    var url = "https://wa.me/" + TEL + "?text=" + encodeURIComponent(msg);
     var env = document.createElement("a");
     env.className = "btn primary";
     env.textContent = "Enviar por WhatsApp";
     env.rel = "noopener";
-    if (url.length > 1900) {
-      env.href = "https://wa.me/" + TEL;
-      env.textContent = "Abrir WhatsApp y pegar";
-    } else {
-      env.href = url;
-    }
+    env.target = "_blank";
+    env.href = "https://wa.me/" + TEL + "?text=" + encodeURIComponent(msg);
     bar.appendChild(env);
 
     pintarProgreso();
