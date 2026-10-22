@@ -1,0 +1,701 @@
+<title>Datos de tu Negocio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: wizard de una columna, barra de progreso fija arriba y barra de acción fija abajo. */
+:root{
+  --bg:#faf8f4;
+  --surface:#ffffff;
+  --surface-2:#f3efe8;
+  --fg:#1c2321;
+  --muted:#5f6b66;
+  --line:#e2ddd4;
+  --accent:#0f6b4f;
+  --accent-ink:#ffffff;
+  --accent-soft:#e6f0eb;
+  --warn:#9c4a12;
+  --warn-soft:#fbeee2;
+  --font-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14181a;
+    --surface:#1c2224;
+    --surface-2:#232b2d;
+    --fg:#eceae4;
+    --muted:#9aa5a0;
+    --line:#2e3639;
+    --accent:#4cb98c;
+    --accent-ink:#0c1a14;
+    --accent-soft:#1b2f27;
+    --warn:#e2954f;
+    --warn-soft:#2b2017;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14181a;
+  --surface:#1c2224;
+  --surface-2:#232b2d;
+  --fg:#eceae4;
+  --muted:#9aa5a0;
+  --line:#2e3639;
+  --accent:#4cb98c;
+  --accent-ink:#0c1a14;
+  --accent-soft:#1b2f27;
+  --warn:#e2954f;
+  --warn-soft:#2b2017;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.5;
+  margin:0;
+}
+body::before{
+  content:"";position:fixed;inset:0 0 auto;
+  height:env(safe-area-inset-top,0px);
+  background:var(--surface);z-index:10;
+}
+
+/* ---------- progreso ---------- */
+.topbar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:9;
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+}
+.topbar-in{
+  max-width:34rem;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:10px 12px;
+}
+.topbar-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.brandmark{
+  font-family:var(--font-display);font-weight:700;font-size:.78rem;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+}
+.stepcount{
+  font-family:var(--font-display);font-weight:600;font-size:.8rem;
+  color:var(--accent);font-variant-numeric:tabular-nums;
+}
+.track{display:flex;gap:4px;margin-top:9px}
+.tick{height:4px;flex:1;border-radius:99px;background:var(--line)}
+.tick.done{background:var(--accent)}
+.tick.now{background:var(--accent);opacity:.45}
+
+/* ---------- contenedor ---------- */
+.wrap{
+  max-width:34rem;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:22px 0;
+}
+.pad-bottom{height:112px}
+
+h1{
+  font-family:var(--font-display);font-weight:700;
+  font-size:1.6rem;line-height:1.18;margin:0 0 8px;
+  text-wrap:balance;letter-spacing:-.015em;
+}
+h2{
+  font-family:var(--font-display);font-weight:600;
+  font-size:1.3rem;line-height:1.22;margin:0 0 6px;
+  text-wrap:balance;letter-spacing:-.01em;
+}
+.lede{color:var(--muted);margin:0 0 20px;font-size:1rem}
+.stepintro{color:var(--muted);margin:0 0 22px;font-size:.97rem}
+
+/* ---------- campos ---------- */
+.field{margin-bottom:22px}
+label.q{
+  display:block;font-family:var(--font-display);font-weight:600;
+  font-size:1.02rem;line-height:1.32;margin-bottom:3px;
+}
+.req{color:var(--accent);font-weight:700}
+.hint{display:block;color:var(--muted);font-size:.9rem;margin-bottom:8px;line-height:1.42}
+input[type=text],input[type=tel],input[type=email],input[type=url],textarea{
+  width:100%;font:inherit;font-size:1.02rem;color:var(--fg);
+  background:var(--surface);
+  border:1.5px solid var(--line);border-radius:11px;
+  padding:12px 13px;
+  -webkit-appearance:none;appearance:none;
+}
+textarea{resize:vertical;min-height:84px;line-height:1.45}
+input:focus-visible,textarea:focus-visible{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
+.field.bad input,.field.bad textarea{border-color:var(--warn)}
+.err{
+  display:none;color:var(--warn);font-size:.88rem;font-weight:600;margin-top:6px;
+}
+.field.bad .err{display:block}
+
+/* opciones */
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.opt{
+  display:flex;align-items:flex-start;gap:11px;
+  background:var(--surface);
+  border:1.5px solid var(--line);border-radius:11px;
+  padding:12px 13px;cursor:pointer;
+}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.opt:has(input:focus-visible){box-shadow:0 0 0 3px var(--accent-soft)}
+.opt input{margin:2px 0 0;accent-color:var(--accent);width:19px;height:19px;flex:none}
+.opt span{line-height:1.38}
+.field.bad .opt{border-color:var(--warn)}
+
+/* avisos */
+.note{
+  background:var(--surface-2);border-radius:12px;
+  padding:14px 15px;margin-bottom:22px;
+  font-size:.94rem;line-height:1.5;color:var(--fg);
+}
+.note strong{font-family:var(--font-display)}
+.note.flag{background:var(--warn-soft)}
+.note ul{margin:8px 0 0;padding-left:19px}
+.note li{margin-bottom:5px}
+
+/* ---------- barra de acción ---------- */
+.actions{
+  position:fixed;left:0;right:0;bottom:0;z-index:9;
+  background:var(--surface);border-top:1px solid var(--line);
+  padding-top:11px;
+  padding-bottom:calc(11px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.actions-in{max-width:34rem;margin:0 auto;display:flex;gap:10px;align-items:center}
+.btn{
+  font-family:var(--font-display);font-weight:600;font-size:1.02rem;
+  border-radius:11px;padding:13px 18px;border:1.5px solid transparent;
+  cursor:pointer;text-align:center;text-decoration:none;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn.primary{background:var(--accent);color:var(--accent-ink);flex:1}
+.btn.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+.btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.btn[aria-disabled=true]{opacity:.5;pointer-events:none}
+.saved{
+  font-size:.82rem;color:var(--muted);text-align:center;
+  max-width:34rem;margin:7px auto 0;min-height:1.1em;
+}
+
+/* ---------- repaso ---------- */
+.sum{border-top:1px solid var(--line);margin-bottom:20px}
+.sum h3{
+  font-family:var(--font-display);font-size:.78rem;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+  margin:18px 0 10px;
+}
+.row{display:flex;flex-direction:column;gap:1px;padding:8px 0;border-bottom:1px solid var(--line)}
+.row dt{font-size:.85rem;color:var(--muted)}
+.row dd{margin:0;font-size:.98rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.row.miss dd{color:var(--warn);font-weight:600}
+.out{
+  width:100%;font:inherit;font-size:.86rem;line-height:1.45;
+  background:var(--surface-2);color:var(--fg);
+  border:1px solid var(--line);border-radius:11px;
+  padding:12px;min-height:150px;resize:vertical;margin-top:4px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+.hidden{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .btn,.opt,input,textarea{transition:border-color .12s,background .12s,box-shadow .12s}
+}
+</style>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="topbar-row">
+      <span class="brandmark">Datos de tu negocio</span>
+      <span class="stepcount" id="stepcount">Paso 1 de 7</span>
+    </div>
+    <div class="track" id="track"></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div id="screen"></div>
+  <div class="pad-bottom"></div>
+</main>
+
+<div class="actions">
+  <div class="actions-in" id="actionbar"></div>
+  <p class="saved" id="saved"></p>
+</div>
+
+<script>
+/* =========================================================================
+   CONFIGURACIÓN — cambia este número por el tuyo.
+   Formato: indicativo del país + número, sin +, sin espacios, sin guiones.
+   Colombia: 57 + celular de 10 dígitos.  Ejemplo: 573001234567
+   También se puede sobrescribir en el enlace:  ...?tel=573001234567
+   ========================================================================= */
+var CONFIG = { tel: "573016679791" };
+
+(function () {
+  "use strict";
+
+  var params = new URLSearchParams(location.search);
+  var telParam = (params.get("tel") || "").replace(/[^0-9]/g, "");
+  var TEL = telParam || CONFIG.tel;
+
+  var KEY = "datos-negocio-v1";
+
+  // ---------------------------------------------------------------- esquema
+  var PASOS = [
+    {
+      titulo: "Empecemos por tu negocio",
+      intro: "Responde con tus propias palabras. No te preocupes por la ortografía ni por que suene bonito: de eso me encargo yo.",
+      campos: [
+        { id: "nombre", q: "¿Cómo se llama tu negocio?", hint: "Escríbelo tal como quieres que aparezca en la página.", req: true },
+        { id: "dedica", q: "Si alguien te pregunta en la calle a qué se dedica tu negocio, ¿qué le respondes?", hint: "Una sola frase, como se la dirías a un vecino.", t: "area", req: true },
+        { id: "vende", q: "¿Qué vendes u ofreces?", hint: "Entre 5 y 10 cosas, las más importantes primero. Sé concreto: no «productos de ferretería», sino «tornillos, pintura, herramienta eléctrica, cerraduras».", t: "area", req: true },
+        { id: "desde", q: "¿Desde qué año existe el negocio?", hint: "Si llevas tiempo en el barrio, cuéntame cuánto." },
+        { id: "historia", q: "¿Es un negocio familiar? ¿Quién lo fundó y por qué?", hint: "Opcional, pero una historia real vale más que cualquier texto que yo pueda inventar.", t: "area" }
+      ]
+    },
+    {
+      titulo: "Por qué te eligen a ti",
+      intro: "Estas son las preguntas más importantes de todas. De aquí sale casi todo el texto de tu página, y son las que nadie puede responder por ti.",
+      campos: [
+        { id: "razones", q: "¿Por qué te compran a ti y no al negocio de la esquina?", hint: "Dame 3 razones concretas. Por ejemplo: «abro los domingos», «fío a los clientes de siempre», «llevo la herramienta hasta la obra».", t: "area", req: true },
+        { id: "mejor", q: "¿Qué es lo que más te piden, o lo que haces mejor que nadie?", t: "area" },
+        { id: "diferencial", q: "¿Tienes algo que los demás no tengan?", hint: "Una marca exclusiva, una técnica propia, garantía, domicilio gratis, parqueadero, precios de mayorista.", t: "area" },
+        { id: "frases", q: "¿Qué te dicen tus clientes cuando quedan contentos?", hint: "Escríbeme 2 o 3 frases tal como las dicen, aunque suenen simples.", t: "area" }
+      ]
+    },
+    {
+      titulo: "Tono y búsquedas",
+      intro: "Con esto defino cómo suena tu página y cómo la configuro para que los buscadores la entiendan.",
+      campos: [
+        { id: "tono", q: "¿Cómo quieres que suene tu página?", t: "radio", req: true, ops: ["Cercana y familiar, como si hablara un vecino", "Formal y profesional, de empresa seria", "Juvenil y relajada", "Técnica y directa, al grano"] },
+        { id: "palabras", q: "¿Con qué palabras crees que la gente te busca en Google?", hint: "Escríbelas como las diría un cliente, no como las diría un experto. Por ejemplo: «ferretería cerca de mí», «dónde comprar pintura», «cerrajero 24 horas».", t: "area", req: true },
+        { id: "zona", q: "¿En qué ciudad, barrio o zona quieres que te encuentren?", hint: "Si atiendes varios barrios o municipios, nómbralos.", req: true },
+        { id: "certificaciones", q: "¿Tienes certificaciones, permisos, premios o reconocimientos?", hint: "Cámara de Comercio, INVIMA, Secretaría de Salud, distribuidor autorizado de alguna marca.", t: "area" },
+        { id: "nomencionar", q: "¿Hay algo que prefieras que NO se mencione en la página?", hint: "Precios, nombres de personas, algún servicio que ya no prestas.", t: "area" }
+      ]
+    },
+    {
+      titulo: "Dónde quedas",
+      intro: "Esta información se publica tal cual. Revísala con cuidado: una dirección mal escrita significa clientes perdidos.",
+      campos: [
+        { id: "direccion", q: "¿Cuál es la dirección exacta del local?", hint: "Incluye el barrio y un punto de referencia. Por ejemplo: «Calle 45 #12-30, barrio El Prado, al lado de la panadería La Espiga».", t: "area", req: true },
+        { id: "maps", q: "Pégame el enlace de Google Maps de tu negocio", hint: "Búscalo en Google Maps, toca «Compartir» y pega el enlace aquí. Si no apareces en Maps, escribe «no aparezco» y lo resolvemos con la dirección.", req: true },
+        { id: "parqueadero", q: "¿Tienes parqueadero? ¿El local es accesible para personas con movilidad reducida?" },
+        { id: "domicilios", q: "¿Haces domicilios o entregas? ¿Hasta dónde llegas y tiene costo?", t: "area" }
+      ]
+    },
+    {
+      titulo: "Horarios y contacto",
+      intro: "Los horarios son lo que más consulta la gente y lo que más se equivoca. Tómate un minuto con esta parte.",
+      campos: [
+        { id: "whatsapp", q: "¿A qué número de WhatsApp quieres que te escriban?", hint: "Confírmame que es el número que SÍ revisas a diario.", t: "tel", req: true },
+        { id: "mensaje_wpp", q: "¿Qué mensaje quieres que aparezca ya escrito cuando alguien te escriba desde la página?", hint: "Por ejemplo: «Hola, vi su página y quiero preguntar por...». Así sabes de dónde viene el cliente." },
+        { id: "h_semana", q: "Horario de lunes a viernes", hint: "Si cierras a mediodía, dímelo. Por ejemplo: «8:00 a.m. a 12:00 m. y 2:00 a 6:00 p.m.»", req: true },
+        { id: "h_sabado", q: "Horario los sábados" },
+        { id: "h_domingo", q: "Horario los domingos", hint: "Si no abres, escribe «cerrado»." },
+        { id: "h_festivos", q: "Horario los días festivos" },
+        { id: "telefono", q: "Teléfono fijo, si tienes", t: "tel" },
+        { id: "correo", q: "Correo electrónico de contacto", t: "email" },
+        { id: "pagos", q: "¿Qué medios de pago aceptas?", t: "check", ops: ["Efectivo", "Nequi", "Daviplata", "Transferencia bancaria", "Tarjeta débito o crédito", "Addi, Sistecrédito u otro crédito"] }
+      ]
+    },
+    {
+      titulo: "Redes e imagen",
+      intro: "Solo voy a enlazar las redes que estén activas. Enlazar un perfil abandonado hace ver mal el negocio.",
+      campos: [
+        { id: "instagram", q: "Instagram", hint: "Pega el enlace completo, no solo el @usuario. Déjalo vacío si no tienes o no la usas." },
+        { id: "facebook", q: "Facebook" },
+        { id: "tiktok", q: "TikTok" },
+        { id: "otra_red", q: "Otra red o enlace" },
+        { id: "logo", q: "¿Tienes logo?", t: "radio", ops: ["Sí tengo logo", "No tengo logo"], hint: "Si tienes, mándamelo por WhatsApp en la mejor calidad que puedas." },
+        { id: "colores", q: "¿Qué colores identifican tu negocio?", hint: "Los del letrero, el logo, el uniforme o la fachada. Si no tienes definidos, dime cuáles te gustan." },
+        { id: "referencia", q: "¿Hay alguna página web que te guste y quieras usar como referencia?", hint: "No tiene que ser de tu mismo negocio. Con uno o dos ejemplos me basta." }
+      ]
+    },
+    {
+      titulo: "La dirección de tu página",
+      intro: "El dominio es lo que la gente escribe para entrar, por ejemplo tunegocio.com. De comprarlo, configurarlo y renovarlo me encargo yo. Queda registrado a tu nombre, así que es tuyo.",
+      campos: [
+        { id: "tiene_dominio", q: "¿Ya tienes un dominio?", t: "radio", req: true, ops: ["No tengo, encárgate tú", "Sí ya tengo uno"] },
+        { id: "dominio_actual", q: "¿Cuál es y con qué empresa lo compraste?", si: { campo: "tiene_dominio", vale: "Sí ya tengo uno" } },
+        { id: "dominio_ideas", q: "Dame 3 opciones de nombre que te gusten, en orden de preferencia", hint: "Cortos y fáciles de dictar por teléfono. Por ejemplo: eltornillofeliz.com, ferreteriaelprado.com", t: "area", req: true, si: { campo: "tiene_dominio", vale: "No tengo, encárgate tú" } },
+        { id: "t_nombre", q: "Nombre completo o razón social del titular", hint: "El dominio queda a nombre de quien escribas aquí.", req: true, si: { campo: "tiene_dominio", vale: "No tengo, encárgate tú" } },
+        { id: "t_doc", q: "Cédula o NIT del titular", req: true, si: { campo: "tiene_dominio", vale: "No tengo, encárgate tú" } },
+        { id: "t_direccion", q: "Dirección del titular", req: true, si: { campo: "tiene_dominio", vale: "No tengo, encárgate tú" } },
+        { id: "t_correo", q: "Correo electrónico del titular", hint: "Tiene que ser un correo al que TÚ tengas acceso. Ahí llegan los avisos de renovación.", t: "email", req: true, si: { campo: "tiene_dominio", vale: "No tengo, encárgate tú" } },
+        { id: "accion", q: "¿Qué quieres que haga la persona que entra a tu página?", t: "radio", ops: ["Que me escriba por WhatsApp", "Que me llame", "Que vaya al local", "Que me siga en redes sociales"] },
+        { id: "aprueba", q: "¿Quién va a revisar y aprobar la página?", hint: "Tiene que ser una sola persona. Si cada cambio pasa por tres personas con opiniones distintas, las dos rondas se agotan sin avanzar.", req: true },
+        { id: "factura", q: "¿Necesitas factura?", t: "radio", ops: ["No necesito factura", "Sí necesito factura"] },
+        { id: "factura_datos", q: "Razón social, NIT y dirección de facturación", t: "area", si: { campo: "factura", vale: "Sí necesito factura" } }
+      ]
+    }
+  ];
+
+  var TOTAL = PASOS.length;
+  var datos = {};
+  var paso = 0;
+
+  // ---------------------------------------------------------- almacenamiento
+  function cargar() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) datos = JSON.parse(raw) || {};
+    } catch (e) { datos = {}; }
+  }
+  var avisoTimer = null;
+  function guardar() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(datos));
+      var el = document.getElementById("saved");
+      el.textContent = "Respuestas guardadas en este celular";
+      clearTimeout(avisoTimer);
+      avisoTimer = setTimeout(function () { el.textContent = ""; }, 2200);
+    } catch (e) { /* modo privado o almacenamiento bloqueado */ }
+  }
+
+  // --------------------------------------------------------------- utilidades
+  function visible(c) {
+    if (!c.si) return true;
+    return (datos[c.si.campo] || "") === c.si.vale;
+  }
+  function camposDe(i) { return PASOS[i].campos.filter(visible); }
+  function lleno(c) {
+    var v = datos[c.id];
+    if (c.t === "check") return Array.isArray(v) && v.length > 0;
+    return typeof v === "string" && v.trim() !== "";
+  }
+  function el(tag, cls, txt) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (txt != null) n.textContent = txt;
+    return n;
+  }
+
+  // ------------------------------------------------------------------ pintar
+  function pintarProgreso() {
+    var t = document.getElementById("track");
+    t.textContent = "";
+    for (var i = 0; i < TOTAL + 1; i++) {
+      var d = el("div", "tick" + (i < paso ? " done" : i === paso ? " now" : ""));
+      t.appendChild(d);
+    }
+    document.getElementById("stepcount").textContent =
+      paso < TOTAL ? "Paso " + (paso + 1) + " de " + TOTAL : "Último paso";
+  }
+
+  function campoDOM(c) {
+    var wrap = el("div", "field");
+    wrap.dataset.for = c.id;
+
+    var lab = el("label", "q");
+    lab.setAttribute("for", "f_" + c.id);
+    lab.appendChild(document.createTextNode(c.q + " "));
+    if (c.req) {
+      var star = el("span", "req", "*");
+      lab.appendChild(star);
+    }
+    wrap.appendChild(lab);
+
+    if (c.hint) wrap.appendChild(el("span", "hint", c.hint));
+
+    if (c.t === "radio" || c.t === "check") {
+      var box = el("div", "opts");
+      c.ops.forEach(function (op, k) {
+        var l = el("label", "opt");
+        var inp = document.createElement("input");
+        inp.type = c.t === "radio" ? "radio" : "checkbox";
+        inp.name = c.id;
+        inp.id = "f_" + c.id + (k ? "_" + k : "");
+        inp.value = op;
+        if (c.t === "radio") {
+          inp.checked = datos[c.id] === op;
+        } else {
+          inp.checked = Array.isArray(datos[c.id]) && datos[c.id].indexOf(op) >= 0;
+        }
+        inp.addEventListener("change", function () {
+          if (c.t === "radio") {
+            datos[c.id] = op;
+            wrap.classList.remove("bad");
+            guardar();
+            if (PASOS[paso].campos.some(function (x) { return x.si && x.si.campo === c.id; })) {
+              render();
+              return;
+            }
+          } else {
+            var lista = Array.isArray(datos[c.id]) ? datos[c.id].slice() : [];
+            var idx = lista.indexOf(op);
+            if (inp.checked && idx < 0) lista.push(op);
+            if (!inp.checked && idx >= 0) lista.splice(idx, 1);
+            datos[c.id] = lista;
+            wrap.classList.remove("bad");
+            guardar();
+          }
+        });
+        l.appendChild(inp);
+        l.appendChild(el("span", null, op));
+        box.appendChild(l);
+      });
+      wrap.appendChild(box);
+    } else {
+      var inp2;
+      if (c.t === "area") {
+        inp2 = document.createElement("textarea");
+        inp2.rows = 3;
+      } else {
+        inp2 = document.createElement("input");
+        inp2.type = c.t === "tel" ? "tel" : c.t === "email" ? "email" : "text";
+        if (c.t === "email") inp2.setAttribute("autocapitalize", "none");
+      }
+      inp2.id = "f_" + c.id;
+      inp2.value = typeof datos[c.id] === "string" ? datos[c.id] : "";
+      inp2.addEventListener("input", function () {
+        datos[c.id] = inp2.value;
+        wrap.classList.remove("bad");
+      });
+      inp2.addEventListener("blur", guardar);
+      wrap.appendChild(inp2);
+    }
+
+    var e = el("div", "err", "Esta respuesta me hace falta para poder empezar.");
+    wrap.appendChild(e);
+    return wrap;
+  }
+
+  function pantallaPaso() {
+    var s = document.getElementById("screen");
+    s.textContent = "";
+    var p = PASOS[paso];
+
+    s.appendChild(el("h1", null, p.titulo));
+    if (p.intro) s.appendChild(el("p", "stepintro", p.intro));
+
+    camposDe(paso).forEach(function (c) { s.appendChild(campoDOM(c)); });
+
+    if (paso === TOTAL - 1) {
+      var n = el("div", "note flag");
+      n.appendChild(el("strong", null, "Falta lo más importante: las fotos."));
+      var pp = el("p", null, "Las fotos no se pueden subir aquí, mándamelas por WhatsApp. Necesito mínimo 3 y no puedo inventarlas: sin fotos tuyas la página queda con imágenes genéricas y eso se nota.");
+      pp.style.margin = "6px 0 0";
+      n.appendChild(pp);
+      var ul = document.createElement("ul");
+      ["La fachada del local, de día y con buena luz.", "El interior, ordenado y con las luces encendidas.", "Tus productos o tu trabajo terminado.", "Tú o tu equipo atendiendo. Una cara real genera más confianza que cualquier texto."].forEach(function (t) {
+        ul.appendChild(el("li", null, t));
+      });
+      n.appendChild(ul);
+      s.appendChild(n);
+    }
+
+    barraPaso();
+    pintarProgreso();
+    window.scrollTo(0, 0);
+  }
+
+  function barraPaso() {
+    var bar = document.getElementById("actionbar");
+    bar.textContent = "";
+    if (paso > 0) {
+      var atras = el("button", "btn ghost", "Atrás");
+      atras.type = "button";
+      atras.addEventListener("click", function () { paso--; render(); });
+      bar.appendChild(atras);
+    }
+    var sig = el("button", "btn primary", paso === TOTAL - 1 ? "Ver mis respuestas" : "Siguiente");
+    sig.type = "button";
+    sig.addEventListener("click", function () {
+      if (!validar()) return;
+      paso++;
+      render();
+    });
+    bar.appendChild(sig);
+  }
+
+  function validar() {
+    var malo = null;
+    camposDe(paso).forEach(function (c) {
+      var nodo = document.querySelector('.field[data-for="' + c.id + '"]');
+      if (!nodo) return;
+      if (c.req && !lleno(c)) {
+        nodo.classList.add("bad");
+        if (!malo) malo = nodo;
+      } else {
+        nodo.classList.remove("bad");
+      }
+    });
+    guardar();
+    if (malo) {
+      malo.scrollIntoView({ block: "center", behavior: "smooth" });
+      var f = malo.querySelector("input,textarea");
+      if (f) f.focus({ preventScroll: true });
+      return false;
+    }
+    return true;
+  }
+
+  // ------------------------------------------------------------- texto final
+  function valorTexto(c) {
+    var v = datos[c.id];
+    if (c.t === "check") return Array.isArray(v) ? v.join(", ") : "";
+    return typeof v === "string" ? v.trim() : "";
+  }
+
+  function faltantes() {
+    var out = [];
+    PASOS.forEach(function (p, i) {
+      p.campos.filter(visible).forEach(function (c) {
+        if (c.req && !lleno(c)) out.push({ paso: i, c: c });
+      });
+    });
+    return out;
+  }
+
+  function construirMensaje() {
+    var L = [];
+    L.push("*DATOS PARA MI PÁGINA WEB*");
+    var nom = valorTexto({ id: "nombre" });
+    if (nom) L.push(nom);
+    PASOS.forEach(function (p, i) {
+      var lineas = [];
+      p.campos.filter(visible).forEach(function (c) {
+        var v = valorTexto(c);
+        if (v) lineas.push("_" + c.q.replace(/\*/g, "") + "_\n" + v);
+      });
+      if (lineas.length) {
+        L.push("");
+        L.push("*" + (i + 1) + ". " + p.titulo.toUpperCase() + "*");
+        L.push(lineas.join("\n\n"));
+      }
+    });
+    L.push("");
+    L.push("*FOTOS*");
+    L.push("Las envío por WhatsApp.");
+    return L.join("\n");
+  }
+
+  function pantallaFinal() {
+    var s = document.getElementById("screen");
+    s.textContent = "";
+    var falta = faltantes();
+
+    s.appendChild(el("h1", null, falta.length ? "Casi listo" : "Todo listo"));
+    s.appendChild(el("p", "lede", falta.length
+      ? "Te faltan " + falta.length + " respuesta" + (falta.length === 1 ? "" : "s") + " que necesito para poder empezar. Están marcadas abajo."
+      : "Revisa que todo esté bien y mándame las respuestas. Llegan a mi WhatsApp como un solo mensaje."));
+
+    if (falta.length) {
+      var nf = el("div", "note flag");
+      nf.appendChild(el("strong", null, "Me hace falta:"));
+      var ul = document.createElement("ul");
+      falta.forEach(function (f) {
+        var li = el("li", null, f.c.q + " ");
+        var a = el("button", null, "— ir al paso " + (f.paso + 1));
+        a.type = "button";
+        a.style.cssText = "background:none;border:none;padding:0;font:inherit;color:var(--warn);font-weight:600;text-decoration:underline;cursor:pointer";
+        a.addEventListener("click", function () { paso = f.paso; render(); });
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      nf.appendChild(ul);
+      s.appendChild(nf);
+    }
+
+    // repaso
+    var sum = el("div", "sum");
+    PASOS.forEach(function (p, i) {
+      var dl = document.createElement("dl");
+      dl.style.margin = "0";
+      var hay = false;
+      p.campos.filter(visible).forEach(function (c) {
+        var v = valorTexto(c);
+        if (!v && !c.req) return;
+        hay = true;
+        var row = el("div", "row" + (!v ? " miss" : ""));
+        row.appendChild(el("dt", null, c.q));
+        row.appendChild(el("dd", null, v || "Falta por responder"));
+        dl.appendChild(row);
+      });
+      if (hay) {
+        sum.appendChild(el("h3", null, (i + 1) + ". " + p.titulo));
+        sum.appendChild(dl);
+      }
+    });
+    s.appendChild(sum);
+
+    // texto plano de respaldo
+    var msg = construirMensaje();
+    var nb = el("div", "note");
+    nb.appendChild(el("strong", null, "Si el botón de WhatsApp no te funciona"));
+    var pb = el("p", null, "Copia este texto y pégalo en nuestro chat. Dice exactamente lo mismo.");
+    pb.style.margin = "6px 0 8px";
+    nb.appendChild(pb);
+    var ta = document.createElement("textarea");
+    ta.className = "out";
+    ta.id = "salida";
+    ta.readOnly = true;
+    ta.value = msg;
+    nb.appendChild(ta);
+    var copiar = el("button", "btn ghost", "Copiar el texto");
+    copiar.type = "button";
+    copiar.style.marginTop = "10px";
+    copiar.addEventListener("click", function () {
+      function ok() { copiar.textContent = "Copiado"; setTimeout(function () { copiar.textContent = "Copiar el texto"; }, 1800); }
+      function manual() { ta.focus(); ta.select(); copiar.textContent = "Selecciona y copia"; setTimeout(function () { copiar.textContent = "Copiar el texto"; }, 2600); }
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(msg).then(ok, manual);
+        } else { manual(); }
+      } catch (e) { manual(); }
+    });
+    nb.appendChild(copiar);
+    s.appendChild(nb);
+
+    var np = el("div", "note");
+    np.appendChild(el("strong", null, "Tus datos no se guardan en ningún servidor."));
+    var pp2 = el("p", null, "Las respuestas quedan solo en este celular, y se van únicamente al chat de WhatsApp cuando tú le des al botón.");
+    pp2.style.margin = "6px 0 0";
+    np.appendChild(pp2);
+    s.appendChild(np);
+
+    // barra de acción
+    var bar = document.getElementById("actionbar");
+    bar.textContent = "";
+    var atras = el("button", "btn ghost", "Atrás");
+    atras.type = "button";
+    atras.addEventListener("click", function () { paso = TOTAL - 1; render(); });
+    bar.appendChild(atras);
+
+    var url = "https://wa.me/" + TEL + "?text=" + encodeURIComponent(msg);
+    var env = document.createElement("a");
+    env.className = "btn primary";
+    env.textContent = "Enviar por WhatsApp";
+    env.rel = "noopener";
+    if (url.length > 1900) {
+      env.href = "https://wa.me/" + TEL;
+      env.textContent = "Abrir WhatsApp y pegar";
+    } else {
+      env.href = url;
+    }
+    bar.appendChild(env);
+
+    pintarProgreso();
+    window.scrollTo(0, 0);
+  }
+
+  function render() {
+    if (paso >= TOTAL) pantallaFinal();
+    else pantallaPaso();
+  }
+
+  cargar();
+  render();
+})();
+</script>
